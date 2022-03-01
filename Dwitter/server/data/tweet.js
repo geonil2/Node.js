@@ -3,43 +3,51 @@ let tweets = [
         id: "1",
         text: 'Let`s start',
         createdAt: Date.now().toString(),
-        name: 'Bob',
-        username: 'bob',
-        url: 'https://picsum.photos/600/300',
+        userId: '1',
     },
     {
         id: "1",
         text: 'Let`s start2',
         createdAt: Date.now().toString(),
-        name: 'Geonil',
-        username: 'geonil',
-        url: 'https://picsum.photos/600/300',
+        userId: '1',
     }
 ];
 
 export async function getAll() {
-    return tweets;
+    return Promise.all(
+        tweets.map(async (tweet) => {
+            const { username, name, url } = await userRepository.findById(
+                tweet.userId
+            );
+            return { ...tweet, username, name, url };
+        })
+    );
 }
 
 export async function getAllByUsername(username) {
-    return tweets.filter(t => t.username === username);
+    return getAll().then((tweets) =>
+        tweets.filter((tweet) => tweet.username === username)
+    );
 }
 
 export async function getById(id) {
-    const tweet = tweets.find(t => t.id === id);
-    return tweet;
+    const found = tweets.find((tweet) => tweet.id === id);
+    if(!found) {
+        return null;
+    }
+    const { username, name, url } = await userRepository.findById(found.userId);
+    return { ...found, username, name, url };
 }
 
-export async function create(text, name, username) {
+export async function create(text, userId) {
     const tweet = {
         id: Date.now().toString(),
         text,
         createAt: new Date(),
-        name,
-        username,
+        userId,
     };
     tweets = [tweet, ...tweets];
-    return tweet;
+    return getById(tweet.id);
 }
 
 export async function update(id, text) {
@@ -47,7 +55,7 @@ export async function update(id, text) {
     if(tweet) {
         tweet.text = text;
     }
-    return tweet;
+    return getById(tweet.id);
 }
 
 export async function remove(id) {
