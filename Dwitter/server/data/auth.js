@@ -7,6 +7,7 @@ export async function findByUsername(username) {
 }
 
 export async function findById(id) {
+    console.log(id)
     return users.find((user) => user.id === id);
 }
 

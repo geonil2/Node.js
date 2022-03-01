@@ -1,16 +1,18 @@
+import * as userRepository from './auth.js';
+
 let tweets = [
-    {
-        id: "1",
-        text: 'Let`s start',
-        createdAt: Date.now().toString(),
-        userId: '1',
-    },
-    {
-        id: "1",
-        text: 'Let`s start2',
-        createdAt: Date.now().toString(),
-        userId: '1',
-    }
+    // {
+    //     id: "1",
+    //     text: 'Let`s start',
+    //     createdAt: new Date().toString(),
+    //     userId: '1',
+    // },
+    // {
+    //     id: "1",
+    //     text: 'Let`s start2',
+    //     createdAt: new Date().toString(),
+    //     userId: '1',
+    // }
 ];
 
 export async function getAll() {
@@ -43,7 +45,7 @@ export async function create(text, userId) {
     const tweet = {
         id: Date.now().toString(),
         text,
-        createAt: new Date(),
+        createAt: new Date().toString(),
         userId,
     };
     tweets = [tweet, ...tweets];
